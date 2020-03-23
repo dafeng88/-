@@ -1,0 +1,47 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+void clear(stack<int>&s)
+{
+	while(!s.empty()){
+		s.pop();
+	}
+}
+int main()
+{
+	int n,m,k,i,j,t,flag;
+	int a[1002];
+	scanf("%d %d %d",&n,&m,&k);
+	stack<int> s;
+	for(t=0;t<k;t++){
+		for(i=0;i<n;i++)scanf("%d",&a[i]);
+		j=0;flag=0;
+		for(i=1;i<=n;){
+			if(j<n){
+				if(a[j]!=i){
+					if(s.size()==m)break;
+					s.push(a[j]);
+					j++;
+				}
+				else{
+					j++;i++;
+				}
+			}
+			while(!s.empty()){
+				if(s.top()!=i){
+					flag=1;break;
+				}
+				else{
+					s.pop();
+					i++;
+				}
+			}
+			if(j>=n&&flag==1)break;	   
+		}
+		if(i>n)printf("YES\n");
+		else printf("NO\n");
+		clear(s);
+	}
+	return 0;
+}
+			
