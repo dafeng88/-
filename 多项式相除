@@ -1,0 +1,112 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<iostream> 
+using namespace std;
+struct node
+{
+	int zhishu;
+	double xishu;
+	struct node* next;
+};
+typedef struct node* list;
+list scan()
+{
+	int i, n;
+	double c;
+	int e;
+	list L, tail, p;
+	L = (list)malloc(sizeof(struct node));//头结点 
+	tail = L;
+	scanf("%d", &n);
+	for (i = 0; i < n; i++) {        //创建链表 
+		scanf("%d %lf", &e, &c);
+		p = (list)malloc(sizeof(struct node));
+		p->zhishu = e;
+		p->xishu = c;
+		p->next = NULL;
+		tail->next = p;
+		tail = p;
+	}
+	return L;//是有头结点的； 
+}
+void div(list l1, list l2, list& S, list& Y)//整个过程可以用整数除法类比 
+{
+	list head1, head2, head, tail, p1, p2, p, pp, pp1,pp2, tmp;
+	int e; double c; 
+	head1 = l1; head2 = l2;
+	p1 = head2->next; 
+	tmp = l1->next;//初始化 
+	head = (list)malloc(sizeof(struct node));//商的头结点 
+	tail = head;
+	while (tmp->zhishu >= p1->zhishu&& tmp->zhishu != 0) {//循环条件 
+		head1 = head1->next;//每次往下一位 
+		p = (list)malloc(sizeof(struct node));
+		p->zhishu = head1->zhishu - p1->zhishu;
+		p->xishu = head1->xishu / p1->xishu;//相除，得到商的第n位 
+		p->next = NULL;//每次一定要置空
+		tail->next = p;
+		tail = p;
+		pp1 = head1;
+		for (pp = p1->next; pp; pp = pp->next) {//减数减去商和被除数的乘积
+			e = pp->zhishu + p->zhishu;
+			c = pp->xishu * p->xishu; //
+			while (pp1->next && pp1->next->zhishu > e) {
+				pp1 = pp1->next;
+			}
+			if (pp1->next &&pp1->next->zhishu == e) {
+				pp1->next->xishu -= c;
+			}
+			else {
+				pp2 = (list)malloc(sizeof(struct node));
+				pp2->zhishu = e;
+				pp2->xishu = -c;
+				pp2->next = pp1->next;
+				pp1->next = pp2;
+			}
+			pp1 = pp1->next;
+		}
+		tmp = head1->next;
+		if (tmp == NULL)break;
+	}
+	Y = tmp;
+	S = head->next;
+}
+void prin(list l,int len)
+{
+	if (len == 0 || len == 1 && l->xishu == 0)printf("0 0 0.0\n");
+	else {
+		list tmp;
+		tmp = l;
+		printf("%d", len);
+		for (tmp = l; tmp->next; tmp = tmp->next) {
+			if(tmp->xishu!=0)
+			printf(" %d %.1f", tmp->zhishu, tmp->xishu);
+		}
+		if (fabs(tmp->xishu - 0.0) > 0.06)printf(" %d %.1f\n", tmp->zhishu, tmp->xishu);
+		else printf("\n");
+	}
+}
+int len(list L)
+{
+	list p;
+	int len = 0;
+	for (p = L; p; p = p->next) {
+		if (fabs(p->xishu - 0.0) < 0.06);
+		else len++;
+	}
+	return len;
+}
+int main()
+{
+	list l1, l2, S, Y;
+	l1 = scan();
+	l2 = scan();
+	div(l1, l2, S, Y);
+	int len1, len2;
+	len1 = len(S);
+	len2 = len(Y);
+	prin(S,len1);
+	prin(Y,len2);
+	return 0;
+}
