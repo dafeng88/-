@@ -1,0 +1,47 @@
+#include<cstdio>
+#include<iostream>
+#include<queue>
+#include<vector>
+#define maxnum 100010
+using namespace std;
+//从孩子逆向找父亲超时，时间复杂度是n^2,想到用广搜，就必须从父节点一次访问下来，可用二维数组重新置放，这里用vector,训练 
+int b[maxnum]; //放置辈分 
+vector<int> v[maxnum];//相当于二维数组 
+int main()
+{
+	int n,i,j,x,root,head;
+	int cnt,min=0,flag=1;
+	scanf("%d",&n);
+	for(i=1;i<=n;i++){
+		 scanf("%d",&x);
+		 if(x!=-1){
+		 	v[x].push_back(i);//父节点：子节点，孩子有多个； 
+		 }
+		 else root=i;
+	}
+	queue<int> q;
+	q.push(root);
+	b[root]=1;
+	while(!q.empty()){
+		head=q.front();
+		q.pop();
+		for(i=0;i<v[head].size();i++){//遍历它的孩子，
+		    j=v[head][i];
+			b[j]=b[head]+1;
+			q.push(j);
+			if(b[j]>min)min=b[j];//寻找最小辈分 
+		}
+	} 
+	printf("%d\n",min);
+	for(i=1;i<=n;i++){
+		if(b[i]==min){
+			if(flag){
+				printf("%d",i);
+				flag=0;
+			}
+			else printf(" %d",i);
+		}
+	}
+	return 0;
+} 
+
