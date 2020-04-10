@@ -1,0 +1,87 @@
+//动态规划不会，暴力求子串，再用kmp算法
+#include<bits/stdc++.h>//万能头文件 
+#define maxsize 61
+using namespace std;
+struct next{
+	int data[maxsize];
+};
+typedef struct next Next;
+void getnextval(char t[],Next&n)//返回数组的方法：全局变量或者结构或者指针 
+{
+	int k=-1,j=0;
+	int len;
+	len=strlen(t);
+	n.data[0]=-1;
+	while(j<len){
+		if(k==-1||t[j]==t[k]){
+			k++;j++;
+			if(t[j]!=t[k])n.data[j]=k;
+			else n.data[j]=n.data[k];//避免回退多次 
+		}
+		else k=n.data[k];
+   }
+}
+bool kmp(char s[],char t[])
+{
+	int j=0,i=0;
+	Next n;
+	getnextval(t,n);
+	int len1,len2;
+	len1=strlen(s);
+	len2=strlen(t);
+	while(j<len2&&i<len1){
+		if(j==-1||t[j]==s[i]){
+			i++;
+			j++;
+		}
+		else j=n.data[j];
+	}
+	if(j>=len2)return true;
+	else return false;
+}
+void match(char c[][maxsize],int m)
+{
+	int i,j,cnt,t;
+	char pattern[maxsize];
+	char ans[maxsize];
+	bool find=false; 
+	strcpy(ans,"Z");//确保初始最大 
+	for(i=60;i>=3;i--){
+		for(j=0;j<=60-i;j++){
+			cnt=0;
+			strncpy(pattern,c[0]+j,i);
+			pattern[i]='\0';
+			for(t=1;t<m;t++){
+				if(kmp(c[t],pattern))cnt++;
+				else break;
+			}
+			if(cnt==m-1&&strcmp(ans,pattern)>0)//长度相等时取前面字母的 
+			{
+				strcpy(ans,pattern);
+				find=true;
+			}
+		}
+		if(find){
+		  printf("%s\n",ans);
+		  return;
+	   }
+		
+	}
+	strcpy(ans,"no significant commonalities");
+    printf("%s\n",ans);
+}
+int main()
+{
+	int num,m,i,j;
+	char c[11][maxsize];//二维数组第二维一定要明确 
+	scanf("%d",&num);
+	while(num--)
+	{
+		scanf("%d",&m);
+		for(i=0;i<m;i++){
+			scanf("%s",c[i]);
+		}
+		match(c,m);
+	}
+	return 0;
+}
