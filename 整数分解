@@ -1,0 +1,33 @@
+#include<stdio.h>
+#define max 85
+int a[max];
+int count = 0, n;
+void dfs(int* a, int number, int location, int sum)//number是拆分的首因子，location是当前的下标
+{
+	int i;
+	if (sum == n) {
+		printf("%d=", n);
+		for (i = 0; i <location; i++) {
+			if (i ==0)printf("%d",a[i]);
+			else printf("+%d",a[i]);
+		}
+		count++;
+		if (count % 4 != 0 && number != n)printf(";");//N=N时后面没有分号
+		if (count % 4 == 0&&count!=0)printf("\n");
+	}
+	else if (sum > n)return;
+	else {                   //核心，做这道题建议先做全排列
+		for (i = number; i <= n; i++) {
+			a[location] = i;
+			sum += i;
+			dfs(a, i, location + 1, sum);//回溯
+			sum -= i;//恢复
+		}
+	}
+}
+int main()
+{
+	scanf("%d", &n);
+	dfs(a, 1, 0, 0);
+	return 0;
+}
