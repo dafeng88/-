@@ -1,0 +1,61 @@
+#include<string>
+#include<iostream>
+#include<stack>
+using namespace std;
+string str;
+int i;
+stack<double>s;
+void getnumber()//获得数字 
+{
+	int j = i;
+	while (j >= 0 && str[j] != ' ') j--;
+	s.push(stod(str.substr(j + 1, i - j)));
+	i = j;
+}
+bool cmp(double a, char c, double b, double& d)
+{
+	switch (c)
+	{
+	case '+':d = a + b; break;
+	case '-':d = a - b; break;
+	case '*':d = a * b; break;
+	case '/':
+		if (b == 0) return false;
+		else
+			d = a / b;
+	}
+	return true;
+}
+int main()
+{
+	int flag = 0;
+	getline(cin, str);
+	i = str.length() - 1;
+	while (i >= 0)
+	{
+		if (str[i] == ' ') i--;
+		else if (str[i] >= '0' && str[i] <= '9')
+			getnumber();
+		else
+		{
+			double a = s.top(); s.pop();
+			double b = s.top(); s.pop();
+			double d;
+			if (!cmp(a, str[i], b, d))
+			{
+				cout << "ERROR";
+				flag = 1;
+				break;
+			}
+			else
+			{
+				s.push(d);
+				i--;
+			}
+		}
+	}
+	if (!flag)
+		printf("%.1f", s.top());
+	return 0;
+
+}
