@@ -1,0 +1,51 @@
+//大胆一点，用地址表示下标 
+#include<stdio.h>
+#include<math.h>
+#define max 100000
+struct node
+{
+	int data;
+	int next;
+};
+struct node a[max];
+int main()
+{
+	int d,n;//d为首地址 
+	int ad;//数据地址 
+	int i,j,k,t;//循环用的 
+	int one[max];
+	int num=1,flag=0;
+	scanf("%d %d",&d,&n);
+	for(i=0;i<n;i++){
+		scanf("%d",&ad);
+		scanf("%d %d",&a[ad].data,&a[ad].next);
+	}
+	for(i=d;a[i].next!=-1;){
+		num++;
+		i=a[i].next;
+	} 
+	j=1;k=1;
+	if(num%2==0)flag=1;//判断是不是为偶数 
+	for(i=d;a[i].next!=-1;){
+	      one[j]=i;
+	      if(k<num/2)j+=2;
+	      else if(k==num/2){
+	      	if(flag!=0)j-=1;//flag为1是偶数 
+	      	else j+=1;
+		  }
+		  else{
+		  	j-=2;
+		  }
+	     k++;
+	     i=a[i].next;
+	}
+	one[0]=i;//最后一个的地址； 
+    printf("%05d %d ",one[0],a[one[0]].data);
+    for(t=1;t<k;t++){
+    	printf("%05d\n",one[t]);
+        printf("%05d %d ",one[t],a[one[t]].data);
+	}
+	printf("-1\n");
+	return 0;
+}
+题目：https://pintia.cn/problem-sets/1233693070906798080/problems/1233693345755344946
